@@ -1,9 +1,10 @@
-import java.sql.*;
-
-public class App {
-    public static void main(String[] args) throws Exception {
+public class Main {
+    public static void main(String[] args) {
         
-        try {
+    }
+}
+
+/*try {
 
             String url = "jdbc:sqlserver://localhost:1433;databaseName=StudentDB;integratedSecurity=true;encrypt=true;trustServerCertificate=true";
             Connection con = DriverManager.getConnection(url);
@@ -22,7 +23,4 @@ public class App {
 
         } catch (SQLException e) {
             e.getStackTrace();
-        }
-
-    }
-}
+        } */
