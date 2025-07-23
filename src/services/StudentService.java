@@ -2,6 +2,7 @@ package services;
 
 import java.sql.*;
 import java.util.*;
+
 import models.*;
 
 public class StudentService {
@@ -24,7 +25,7 @@ public class StudentService {
                 case "1" -> addStudent(scanner, con);
                 case "2" -> viewAllStudent(con);
                 case "3" -> editStudentInfo(scanner, con);
-                case "4" -> System.out.println();
+                case "4" -> deleteStudent(scanner, con);
                 case "5" -> { // back
                     return;
                 }
@@ -136,6 +137,37 @@ public class StudentService {
             ps2.setInt(4, userInputIDToDelete);
             ps2.executeUpdate();
             System.out.println("Student information has been successfully updated.");
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+
+    }
+
+    public void deleteStudent(Scanner scanner, Connection con){
+
+        try {
+            
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM Student;");
+            ResultSet rs = ps.executeQuery();
+            System.out.println();
+            while(rs.next()){
+                System.out.println(
+                    "Student ID [" + rs.getInt(1) + "]" + " | " +
+                    "Full Name: " + rs.getString(2) + " | " +
+                    "Email: " + rs.getString(3) + " | " +
+                    "Age: " + rs.getInt(4) + " | "
+                );
+            }
+
+            System.out.print("Enter Student ID to delete: ");
+            String studentIDToDelete = scanner.nextLine();
+
+            PreparedStatement ps1 = con.prepareStatement("DELETE FROM Enrollment WHERE StudentID = ?; DELETE FROM Student WHERE StudentID = ?;");
+            ps1.setInt(1, Integer.parseInt(studentIDToDelete));
+            ps1.setInt(2, Integer.parseInt(studentIDToDelete));
+            ps1.executeUpdate();
+            System.out.println("The student has been successfully deleted");
 
         } catch (SQLException e) {
             e.getStackTrace();

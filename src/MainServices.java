@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.util.*;
 
+import services.CourseService;
 import services.StudentService;
 
 public class MainServices {
@@ -9,7 +10,7 @@ public class MainServices {
         System.out.println("Developed by: Jherald Kerby Catua | 1ST YEAR BSIT STUDENT");
     }
 
-    public void landingPage(Scanner scanner, StudentService studentService, Connection con){
+    public void landingPage(Scanner scanner, StudentService studentService, CourseService courseService, Connection con){
 
         while(true){
 
@@ -28,7 +29,7 @@ public class MainServices {
                     studentService.studentModule(scanner, con);
                 }
                 case "2" -> { // course module
-
+                    courseService.courseModule(scanner, con);
                 } 
                 case "3" -> { // enrollment module
 

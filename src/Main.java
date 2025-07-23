@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.util.*;
 
-import services.StudentService;
+import services.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,8 +13,9 @@ public class Main {
             Scanner scanner = new Scanner(System.in);
 
             StudentService studentService = new StudentService();
+            CourseService courseService = new CourseService();
             MainServices mainServices = new MainServices();
-            mainServices.landingPage(scanner, studentService, con);
+            mainServices.landingPage(scanner, studentService, courseService, con);
 
             scanner.close();
         } catch (SQLException e) {
