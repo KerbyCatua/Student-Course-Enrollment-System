@@ -15,7 +15,8 @@ public class Main {
             StudentService studentService = new StudentService();
             CourseService courseService = new CourseService();
             MainServices mainServices = new MainServices();
-            mainServices.landingPage(scanner, studentService, courseService, con);
+            EnrollmentService enrollmentService = new EnrollmentService();
+            mainServices.landingPage(scanner, studentService, courseService, enrollmentService, con);
 
             scanner.close();
         } catch (SQLException e) {

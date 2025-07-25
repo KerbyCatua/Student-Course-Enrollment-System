@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.util.*;
 
 import services.CourseService;
+import services.EnrollmentService;
 import services.StudentService;
 
 public class MainServices {
@@ -10,10 +11,9 @@ public class MainServices {
         System.out.println("Developed by: Jherald Kerby Catua | 1ST YEAR BSIT STUDENT");
     }
 
-    public void landingPage(Scanner scanner, StudentService studentService, CourseService courseService, Connection con){
+    public void landingPage(Scanner scanner, StudentService studentService, CourseService courseService, EnrollmentService enrollmentService, Connection con){
 
         while(true){
-
             System.out.print(
                 "\nWelcome to Student Course Enrollment System\n" +
                 "[1] Student Module\n" +
@@ -31,16 +31,15 @@ public class MainServices {
                 case "2" -> { // course module
                     courseService.courseModule(scanner, con);
                 } 
-                case "3" -> { // enrollment module
-
+                case "3" -> { // enrollment module 
+                    enrollmentService.enrollmentModule(scanner, con);
                 } 
-                case "4" -> {
+                case "4" -> { // exit the program
                     System.out.println("The program is exiting...");
                     System.exit(0);
                 }
                 default -> System.out.println("Invalid choice");
             }
-
         }
 
     }
