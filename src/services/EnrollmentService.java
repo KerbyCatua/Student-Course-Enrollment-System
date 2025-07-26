@@ -3,8 +3,6 @@ package services;
 import java.sql.*;
 import java.util.*;
 
-import javax.naming.spi.DirStateFactory.Result;
-
 public class EnrollmentService {
 
     public void enrollmentModule(Scanner scanner, Connection con){
@@ -25,7 +23,7 @@ public class EnrollmentService {
 
             switch (userChoice) {
                 case "1" -> enrollStudent(scanner, con);
-                case "2" -> System.out.println(); // TODO View All Enrollments
+                case "2" -> viewAllEnrolledStudent(scanner, con);
                 case "3" -> System.out.println(); // TODO View Students Enrolled in a Specific Course
                 case "4" -> System.out.println(); // TODO View Courses a Student is Enrolled In
                 case "5" -> { // back
@@ -42,15 +40,23 @@ public class EnrollmentService {
         
         try {
             
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM Enrollment;");
-            ResultSet rs = ps.executeQuery();
-            System.out.println("\nStudent(s) Enrolled");
-            while(rs.next()){
+            PreparedStatement showCourseQuery = con.prepareStatement("SELECT CourseID, CourseName FROM Course;");
+            ResultSet showCourseQueryRS = showCourseQuery.executeQuery();
+            System.out.println("\nCourse(s)");
+            while(showCourseQueryRS.next()){
                 System.out.println(
-                    "-- Enrollment ID [" + rs.getInt("EnrollmentID") + "] | " + 
-                    "Student ID: " + rs.getInt("StudentID") + " | " + 
-                    "Course ID: " + rs.getInt("CourseID") + " | " + 
-                    "Enrollment Date: " + rs.getDate("EnrollDate") + " | "
+                    "Course ID: " + showCourseQueryRS.getInt("CourseID") + " | " + 
+                    "Course Name: " + showCourseQueryRS.getString("CourseName") + " | "
+                );
+            }
+
+            PreparedStatement showStudentQuery = con.prepareStatement("SELECT StudentID, FullName FROM Student;");
+            ResultSet showStudentQueryRS = showStudentQuery.executeQuery();
+            System.out.println("\nStudent(s)");
+            while(showStudentQueryRS.next()){
+                System.out.println(
+                    "Student ID: " + showStudentQueryRS.getInt("StudentID") + " | " + 
+                    "Student Name: " + showStudentQueryRS.getString("FullName") + " | "
                 );
             }
 
@@ -86,6 +92,28 @@ public class EnrollmentService {
                 }
                 case "No" -> System.out.println("Enrollment Canceled.");
                 default -> System.out.println("Invalid Choice, enrollment Canceled.");
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+
+    }
+
+    public void viewAllEnrolledStudent(Scanner scanner, Connection con){
+            
+        try {
+            
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM Enrollment;");
+            ResultSet rs = ps.executeQuery();
+            System.out.println("\nStudent(s) Enrolled");
+            while(rs.next()){
+                System.out.println(
+                    "-- Enrollment ID [" + rs.getInt("EnrollmentID") + "] | " + 
+                    "Student ID: " + rs.getInt("StudentID") + " | " + 
+                    "Course ID: " + rs.getInt("CourseID") + " | " + 
+                    "Enrollment Date: " + rs.getDate("EnrollDate") + " | "
+                );
             }
 
         } catch (SQLException e) {
