@@ -3,6 +3,8 @@ package services;
 import java.sql.*;
 import java.util.*;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 public class EnrollmentService {
 
     public void enrollmentModule(Scanner scanner, Connection con){
@@ -24,7 +26,7 @@ public class EnrollmentService {
             switch (userChoice) {
                 case "1" -> enrollStudent(scanner, con);
                 case "2" -> viewAllEnrolledStudent(scanner, con);
-                case "3" -> System.out.println(); // TODO View Students Enrolled in a Specific Course
+                case "3" -> viewStudentsEnrolledSpecificCourse(scanner, con);
                 case "4" -> System.out.println(); // TODO View Courses a Student is Enrolled In
                 case "5" -> { // back
                     return;
@@ -34,6 +36,49 @@ public class EnrollmentService {
 
         }
         
+    }
+
+    public void viewStudentsEnrolledSpecificCourse(Scanner scanner, Connection con){
+
+        try {
+            
+            PreparedStatement ps = con.prepareStatement("SELECT CourseID, CourseName FROM Course;");
+            ResultSet rs = ps.executeQuery();
+            System.out.println("\nCourse(s)");
+            while(rs.next()){
+                System.out.println(
+                    "Course ID: " + rs.getInt("CourseID") + " | " + 
+                    "Course Name: " + rs.getString("CourseName") + " | "
+                );
+            }
+
+            System.out.print("Select a course ID to view enrolled students: ");
+            String courseIDToShowStudents = scanner.nextLine();
+
+            System.out.println();
+            PreparedStatement ps1 = con.prepareStatement("SELECT CourseName FROM Course WHERE CourseID = ?;");
+            ps1.setInt(1, Integer.parseInt(courseIDToShowStudents));
+            ResultSet rs1 = ps1.executeQuery();
+            while (rs1.next()) {
+                System.out.println(
+                    rs1.getString("CourseName") + " Student(s)"
+                );
+            }
+
+            PreparedStatement ps2 = con.prepareStatement("SELECT StudentID, FullName FROM Student WHERE CourseID = ?;");
+            ps2.setInt(1, Integer.parseInt(courseIDToShowStudents));
+            ResultSet rs2 = ps2.executeQuery();
+            while (rs2.next()) {
+                System.out.println(
+                    "Student ID: " + rs2.getInt("StudentID") + " | " +
+                    "Full Name: " + rs2.getString("FullName") + " | "
+                );
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+
     }
 
     public void enrollStudent(Scanner scanner, Connection con){
@@ -65,17 +110,23 @@ public class EnrollmentService {
             
             System.out.print("Select CourseID to Enroll: ");
             String courseIDToEnroll = scanner.nextLine();
-
-            PreparedStatement ps1 = con.prepareStatement("SELECT FullName, CourseName FROM Student, Course WHERE StudentID = ? AND CourseID = ?;");
-            ps1.setInt(1, Integer.parseInt(studentIDToEnroll));
-            ps1.setInt(2, Integer.parseInt(courseIDToEnroll));
+            //TODO
+            PreparedStatement ps1 = con.prepareStatement(
+                "SELECT s.FullName, c.CourseName " +
+                "FROM Student s " +
+                "JOIN Course c ON c.CourseID = ? " +
+                "WHERE s.StudentID = ?;"
+            );
+            ps1.setInt(1, Integer.parseInt(courseIDToEnroll));
+            ps1.setInt(2, Integer.parseInt(studentIDToEnroll));
             ResultSet rs1 = ps1.executeQuery();
             while(rs1.next()){
                 System.out.println(
-                    "\nStudent FullName: " + rs1.getString("FullName") + 
+                    "\nStudent FullName: " + rs1.getString("FullName") +
                     "\nStudent Course: " + rs1.getString("CourseName")
                 );
             }
+            //TODO
 
             System.out.print("Do you confirm the enrollment of this student? (Yes/No): ");
             String yesOrNoChoice = scanner.nextLine();
@@ -87,6 +138,12 @@ public class EnrollmentService {
                     ps2.setInt(1, Integer.parseInt(studentIDToEnroll));
                     ps2.setInt(2, Integer.parseInt(courseIDToEnroll));
                     ps2.executeUpdate();
+                    // 
+                    PreparedStatement ps3 = con.prepareStatement("UPDATE Student SET CourseID = ? WHERE StudentID = ?;");
+                    ps3.setInt(1, Integer.parseInt(courseIDToEnroll));
+                    ps3.setInt(2, Integer.parseInt(studentIDToEnroll));
+                    ps3.executeUpdate();
+                    
                     System.out.println("Enrollment Successful.");
                     
                 }

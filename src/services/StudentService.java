@@ -43,7 +43,7 @@ public class StudentService {
         System.out.print("Enter Student Email Name: ");
         String email = scanner.nextLine();
 
-        System.out.print("Enter Student Age Name: ");
+        System.out.print("Enter Student Age: ");
         int age = scanner.nextInt();
         scanner.nextLine();
 
