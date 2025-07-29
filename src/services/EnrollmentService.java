@@ -3,7 +3,6 @@ package services;
 import java.sql.*;
 import java.util.*;
 
-import javax.naming.spi.DirStateFactory.Result;
 
 public class EnrollmentService {
 
@@ -16,8 +15,7 @@ public class EnrollmentService {
                 "[1] Enroll a Student in a Course\n" +
                 "[2] View All Enrollments\n" +
                 "[3] View Students Enrolled in a Specific Course\n" +
-                "[4] View Courses a Student is Enrolled In\n" +
-                "[5] Back\n" +
+                "[4] Back\n" +
                 "Enter your choice: "
             );
 
@@ -27,8 +25,7 @@ public class EnrollmentService {
                 case "1" -> enrollStudent(scanner, con);
                 case "2" -> viewAllEnrolledStudent(scanner, con);
                 case "3" -> viewStudentsEnrolledSpecificCourse(scanner, con);
-                case "4" -> System.out.println(); // TODO View Courses a Student is Enrolled In
-                case "5" -> { // back
+                case "4" -> { // back
                     return;
                 }
                 default -> System.out.println("Invalid choice");
